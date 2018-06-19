@@ -24,3 +24,9 @@ sbt:ScalaProgramming> ~ compile
 >>> and will start compiling the Main.scala as an when either of the files changes in the proejct.
 
 
+- Run as jar
+]$ sbt pacakge
+
+]$ scala <jar file path> | scala -classpath <jar file path>
+
+

@@ -1,4 +1,4 @@
-package org.muks.examples.utils
+package org.muks.examples.concepts.utils
 
 class FileUtils {
 
