@@ -43,10 +43,12 @@ object WordCount {
       */
     val charSplitsFlatMap = sparkContext.textFile(resourcesPath.getPath).flatMap(_.split(""))
     charSplitsFlatMap.collect().foreach(println)
+
     val charCounters = charSplitsFlatMap.map(char => (char, 1)).reduceByKey(_ + _)
         .filter( !_._1.equals("'") )
         .filter( !_._1.equals(" ") )
         .filter( !_._1.equals(".") )
+
     charCounters.collect().foreach(println)
 
   }

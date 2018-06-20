@@ -66,9 +66,24 @@ object MaxSal {
       * USing groupBy and takeOrdered( - over reverse ordering - )
       */
     val salaryWithEmployeeName = empDataRdd.map { x => x.split(',') }.map { x => (x(5).toDouble, x(1)) }
-    val maxSalaryEmployee = salaryWithEmployeeName.groupByKey.takeOrdered(2)(Ordering[Double].reverse.on(_._1))
-    print("Max Salary using groupByKey.takeOrdered:- " + maxSalaryEmployee.foreach(println))
+    val maxSalaryGroupByKey = salaryWithEmployeeName.groupByKey.takeOrdered(2)(Ordering[Double].reverse.on(_._1))
+    print("Max Salary using groupByKey.takeOrdered:- " + maxSalaryGroupByKey.foreach(println))
 
+
+    val maxSalaryReduceByKey = salaryWithEmployeeName.reduceByKey(_ + _).takeOrdered(2)(Ordering[Double].reverse.on(_._1))
+    print("Max Salary using ReduceByKey.takeOrdered:- " + maxSalaryReduceByKey.foreach(println))
+
+    /**
+      *   Difference between groupByKey and reduceByKey()
+      *   groupByKey
+      *     -> should be avoided as it shuffles upright
+      *     -> might end up spilling over the disk in case of large datasets
+      *
+      *   reduceByKey()
+      *     -> Preferred for large datasets
+      *     -> Does first reducing, internal within partitions
+      *     -> then shuffles to reduce by finding out the right partitions of similar keys
+      */
   }
 
 
