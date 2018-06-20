@@ -56,7 +56,7 @@ object GroupByReduceByAggregateByKey {
       */
     // reduceByKey((x,y)=> (x+y))
     // Eg-1 //    val maxSalaryReduceByKey = salaryWithEmployeeName.reduceByKey(_ + _).takeOrdered(2)(Ordering[Double].reverse.on(_._1))
-    val maxSalaryReduceByKey = salaryWithEmployeeName.reduceByKey((x, y) => (x ++ y)).mapValues(_.toList).takeOrdered(2)(Ordering[Double].reverse.on(_._1))
+    val maxSalaryReduceByKey = salaryWithEmployeeName.reduceByKey((x, y) => (x + y)).mapValues(_.toList).takeOrdered(2)(Ordering[Double].reverse.on(_._1))
 
     print("Max Salary using ReduceByKey.takeOrdered:- " + maxSalaryReduceByKey.foreach(println))
 
