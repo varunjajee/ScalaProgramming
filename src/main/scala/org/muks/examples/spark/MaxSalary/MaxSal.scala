@@ -70,6 +70,7 @@ object MaxSal {
     print("Max Salary using groupByKey.takeOrdered:- " + maxSalaryGroupByKey.foreach(println))
 
 
+    // reduceByKey((x,y)=> (x+y))
     val maxSalaryReduceByKey = salaryWithEmployeeName.reduceByKey(_ + _).takeOrdered(2)(Ordering[Double].reverse.on(_._1))
     print("Max Salary using ReduceByKey.takeOrdered:- " + maxSalaryReduceByKey.foreach(println))
 
