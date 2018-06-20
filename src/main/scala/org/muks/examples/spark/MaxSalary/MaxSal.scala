@@ -81,7 +81,7 @@ object MaxSal {
       *
       *   reduceByKey()
       *     -> Preferred for large datasets
-      *     -> Does first reducing, internal within partitions
+      *     -> First executes the lamda function within the partitions, first reducing, internal within partitions
       *     -> then shuffles to reduce by finding out the right partitions of similar keys
       */
   }
