@@ -5,41 +5,51 @@ import org.apache.spark.{SparkConf, SparkContext}
 object WordCount {
 
   def main(args: Array[String]): Unit = {
-    println("Scala, word count example.")
-    val inputFilePath = "/Users/mukthara/Data/git/personal/SparkProgramming/src/main/resources/word_count.txt"
 
-    val sc = new SparkContext(new SparkConf().setMaster("local").setAppName("JD Word Counter"))
+    val resourcesPath = getClass.getResource("/word_count.txt") // Load the source data file into RDD
+    println(resourcesPath.getPath)
 
-    // read in text file and split each document into words
-    val tokenized =
-      sc.textFile(inputFilePath)
-        .flatMap(_.split(" "))
-
-    // count the occurrence of each word
-    val wordCounts = tokenized.map((_, 1)).reduceByKey(_ + _)
+    val sparkContext =
+      new SparkContext(
+        new SparkConf()
+          .setMaster("local")
+          .setAppName("JD Word Counter")
+      )
 
 
-    //    // filter out words with fewer than threshold occurrences
-    //    val filtered = wordCounts.filter(_._2 >= threshold)
-    //    // count characters
-    //    val charCounts = filtered.flatMap(_._1.toCharArray).map((_, 1)).reduceByKey(_ + _)
-    //
-    //    System.out.println(charCounts.collect().mkString(", "))
+    val wordSplitsFlatMap = sparkContext.textFile(resourcesPath.getPath).flatMap(_.split(" "))
+    wordSplitsFlatMap.collect().foreach(println)
+
+    val wordCounts = wordSplitsFlatMap.map(word => (word, 1)).reduceByKey(_ + _)
+
+    /**
+      * Alternatively,
+      * val wordCounts = wordSplitsFlatMap.map( (_, 1) ).reduceByKey(_ + _)
+      */
+    wordCounts.collect().foreach(println)
+    System.out.println(wordCounts.collect().mkString(", "))
 
 
-    val counts =
-      tokenized
-        .map(word => (word, 1))
-        .reduceByKey(_ + _)
+    // filter out words with fewer than threshold occurrence
+    val threshold = 3
+    val filteredByCount = wordCounts.filter(_._2 >= threshold)
+    val filteredByString = wordCounts.filter(_._1.equalsIgnoreCase("dumpty"))
 
-    System.out.println(counts.collect().mkString(", "))
+    println("Filtered only \"dumpty\" word: %s" +  filteredByString.collect().foreach(println))
+
+
+    /**
+      *     Character count with multiple filters
+      */
+    val charSplitsFlatMap = sparkContext.textFile(resourcesPath.getPath).flatMap(_.split(""))
+    charSplitsFlatMap.collect().foreach(println)
+    val charCounters = charSplitsFlatMap.map(char => (char, 1)).reduceByKey(_ + _)
+        .filter( !_._1.equals("'") )
+        .filter( !_._1.equals(" ") )
+        .filter( !_._1.equals(".") )
+    charCounters.collect().foreach(println)
+
   }
-
-
-//  private[examples] def delete = {
-//    if (file.isDirectory) Option(file.listFiles).map(_.toList).getOrElse(Nil).foreach(delete(_))
-//    file.delete
-//  }
 
 
 }
