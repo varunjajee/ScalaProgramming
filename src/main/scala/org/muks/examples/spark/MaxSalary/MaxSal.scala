@@ -6,13 +6,13 @@ object MaxSal {
 
   def main(args: Array[String]): Unit = {
 
-    val conf = new SparkConf().setAppName("Emp Dept Assignment").setMaster("local[*]")
-    val sc = new SparkContext(conf)
+    val sparkConf = new SparkConf().setAppName("Emp Dept Assignment").setMaster("local[*]")
+    val sparkContext = new SparkContext(sparkConf)
 
     val resourcesPath = getClass.getResource("/emp.csv") // Load the source data file into RDD
     println(resourcesPath.getPath)
 
-    val empDataRDD = sc.textFile(resourcesPath.getPath)
+    val empDataRDD = sparkContext.textFile(resourcesPath.getPath)
     //println(empDataRDD.foreach(println))
 
     // Find first record of the file
@@ -67,12 +67,12 @@ object MaxSal {
       */
     val salaryWithEmployeeName = empDataRdd.map { x => x.split(',') }.map { x => (x(5).toDouble, x(1)) }
     val maxSalaryGroupByKey = salaryWithEmployeeName.groupByKey.takeOrdered(2)(Ordering[Double].reverse.on(_._1))
-    print("Max Salary using groupByKey.takeOrdered:- " + maxSalaryGroupByKey.foreach(println))
+    print("== Max Salary using groupByKey.takeOrdered:- " + maxSalaryGroupByKey.foreach(println))
 
 
     // reduceByKey((x,y)=> (x+y))
-    val maxSalaryReduceByKey = salaryWithEmployeeName.reduceByKey(_ + _).takeOrdered(2)(Ordering[Double].reverse.on(_._1))
-    print("Max Salary using ReduceByKey.takeOrdered:- " + maxSalaryReduceByKey.foreach(println))
+    val maxSalaryReduceByKey = salaryWithEmployeeName.reduceByKey(_ + _).takeOrdered(3)(Ordering[Double].reverse.on(_._1))
+    print("++ Max Salary using ReduceByKey.takeOrdered:- " + maxSalaryReduceByKey.foreach(println))
 
     /**
       *   Difference between groupByKey and reduceByKey()

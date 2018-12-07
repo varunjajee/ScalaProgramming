@@ -1,4 +1,4 @@
-package org.muks.examples.spark.mapAndFlatMap
+package org.muks.examples.spark.MapAndFlatMap
 
 import org.apache.spark.{SparkConf, SparkContext}
 

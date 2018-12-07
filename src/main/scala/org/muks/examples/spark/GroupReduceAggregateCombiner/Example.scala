@@ -1,4 +1,4 @@
-package org.muks.examples.spark.groupReduceAggregateCombiner
+package org.muks.examples.spark.GroupReduceAggregateCombiner
 
 import org.apache.spark.{SparkConf, SparkContext}
 

@@ -1,4 +1,4 @@
-package org.muks.examples.spark.groupByAnReduceBy
+package org.muks.examples.spark.GroupByAnReduceBy
 
 import org.apache.spark.{SparkConf, SparkContext}
 
